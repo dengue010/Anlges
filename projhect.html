@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8"/>
+ <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+ <title>DRIP STUDIO — Your Fits, Your Way</title>
+ <link href="https://fonts.googleapis.com/css2?family=Anybody:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+ <style>
+   *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+   :root {
+     --bg: #f2ede6; --white: #ffffff; --black: #111111;
+     --pink: #ff4d6d; --yellow: #ffe14d; --green: #3ddc84;
+     --blue: #4dabf7; --gray: #888;
+   }
+   body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--black); overflow-x: hidden; }
+
+
+   nav {
+     position: sticky; top: 0; z-index: 100;
+     background: var(--black);
+     display: flex; align-items: center; justify-content: space-between;
+     padding: 0 40px; height: 64px;
+   }
+   .nav-logo { font-family: 'Anybody', sans-serif; font-weight: 900; font-size: 22px; color: var(--yellow); text-decoration: none; }
+   .nav-links { display: flex; gap: 28px; list-style: none; }
+   .nav-links a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
+   .nav-links a:hover { color: var(--yellow); }
+   .nav-right { display: flex; align-items: center; gap: 16px; }
+   .nav-search { background: rgba(255,255,255,0.1); border: none; border-radius: 20px; padding: 8px 16px; color: white; font-family: 'DM Sans', sans-serif; font-size: 13px; width: 180px; outline: none; }
+   .nav-search::placeholder { color: rgba(255,255,255,0.4); }
+   .nav-cart { background: var(--pink); color: white; border: none; border-radius: 20px; padding: 8px 18px; font-family: 'Anybody', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer; transition: transform 0.15s; }
+   .nav-cart:hover { transform: scale(1.05); }
+
+
+   .hero { min-height: calc(100vh - 64px); display: grid; grid-template-columns: 1fr 1fr; }
+   .hero-left { background: var(--yellow); display: flex; flex-direction: column; justify-content: center; padding: 80px 60px; position: relative; overflow: hidden; }
+   .hero-left::before { content: ''; position: absolute; width: 400px; height: 400px; background: var(--pink); border-radius: 50%; top: -100px; right: -100px; opacity: 0.25; }
+   .hero-tag { display: inline-block; background: var(--black); color: var(--yellow); font-family: 'Anybody', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.1em; padding: 6px 14px; border-radius: 20px; margin-bottom: 24px; width: fit-content; animation: popIn 0.5s ease both; }
+   .hero-title { font-family: 'Anybody', sans-serif; font-weight: 900; font-size: clamp(52px, 6vw, 80px); line-height: 0.95; color: var(--black); letter-spacing: -0.04em; animation: slideUp 0.6s ease 0.1s both; }
+   .hero-title .stroke { -webkit-text-stroke: 3px var(--black); color: transparent; }
+   .hero-desc { font-size: 15px; color: rgba(0,0,0,0.6); margin-top: 20px; max-width: 320px; line-height: 1.6; animation: slideUp 0.6s ease 0.2s both; }
+   .hero-btns { display: flex; gap: 12px; margin-top: 36px; animation: slideUp 0.6s ease 0.3s both; }
+   .btn-black { background: var(--black); color: var(--white); border: none; border-radius: 30px; padding: 14px 28px; font-family: 'Anybody', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+   .btn-black:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
+   .btn-outline { background: transparent; color: var(--black); border: 2px solid var(--black); border-radius: 30px; padding: 14px 28px; font-family: 'Anybody', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; text-decoration: none; transition: background 0.2s, color 0.2s; display: inline-flex; align-items: center; }
+   .btn-outline:hover { background: var(--black); color: var(--yellow); }
+   .hero-stats { display: flex; gap: 32px; margin-top: 48px; animation: slideUp 0.6s ease 0.4s both; }
+   .stat-num { font-family: 'Anybody', sans-serif; font-weight: 900; font-size: 28px; line-height: 1; }
+   .stat-label { font-size: 12px; color: rgba(0,0,0,0.5); margin-top: 4px; }
+   .hero-right { background: var(--black); display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 3px; }
+   .hero-card { position: relative; overflow: hidden; cursor: pointer; }
+   .hero-card-bg { width: 100%; height: 100%; transition: transform 0.5s ease; }
+   .hero-card:hover .hero-card-bg { transform: scale(1.08); }
+   .hc1 { background: linear-gradient(145deg, #ff8fa3 0%, #ff4d6d 100%); grid-row: 1/3; }
+   .hc2 { background: linear-gradient(145deg, #a9d6ff 0%, #4dabf7 100%); }
+   .hc3 { background: linear-gradient(145deg, #b8f5c8 0%, #3ddc84 100%); }
+   .hero-card-label { position: absolute; bottom: 16px; left: 16px; background: white; color: var(--black); font-family: 'Anybody', sans-serif; font-weight: 700; font-size: 12px; padding: 6px 12px; border-radius: 20px; }
+   .hero-card-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: clamp(60px, 8vw, 100px); opacity: 0.3; }
+
+
+   .ticker { background: var(--pink); color: white; overflow: hidden; padding: 10px 0; }
+   .ticker-inner { display: flex; animation: tickerAnim 18s linear infinite; white-space: nowrap; }
+   .ticker-item { font-family: 'Anybody', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.05em; padding: 0 32px; }
+   @keyframes tickerAnim { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+
+   .section { padding: 72px 40px; }
+   .section-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+   .section-title { font-family: 'Anybody', sans-serif; font-weight: 900; font-size: clamp(28px, 3vw, 40px); letter-spacing: -0.03em; }
+   .link-all { font-size: 13px; font-weight: 500; color: var(--gray); text-decoration: none; border-bottom: 1px solid var(--gray); padding-bottom: 2px; transition: color 0.2s, border-color 0.2s; }
+   .link-all:hover { color: var(--black); border-color: var(--black); }
+
+
+   .cat-row { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
+   .cat-row::-webkit-scrollbar { display: none; }
+   .cat-pill { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; }
+   .cat-circle { width: 100px; height: 100px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 36px; transition: transform 0.25s, box-shadow 0.25s; border: 3px solid transparent; }
+   .cat-pill:hover .cat-circle { transform: scale(1.1) rotate(-5deg); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+   .cat-pill.active .cat-circle { border-color: var(--black); }
+   .cc1{background:#ffe0e6} .cc2{background:#dff5e8} .cc3{background:#deeeff} .cc4{background:#fff3cc} .cc5{background:#f0e4ff} .cc6{background:#ffd8cc}
+   .cat-name { font-family: 'Anybody', sans-serif; font-weight: 700; font-size: 12px; text-align: center; }
+
+
+   .products-bg { background: white; }
+   .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+   .product-card { background: var(--bg); border-radius: 16px; overflow: hidden; cursor: pointer; transition: transform 0.25s, box-shadow 0.25s; }
+   .product-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(0,0,0,0.12); }
+   .product-img { aspect-ratio: 1/1; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+   .prod-bg-1{background:linear-gradient(135deg,#ffd6e0,#ffadc2)} .prod-bg-2{background:linear-gradient(135deg,#d0f4de,#a0e4b8)} .prod-bg-3{background:linear-gradient(135deg,#c8e6ff,#90c8f0)} .prod-bg-4{background:linear-gradient(135deg,#fff0c8,#ffd870)} .prod-bg-5{background:linear-gradient(135deg,#e8d8ff,#c8a0f0)} .prod-bg-6{background:linear-gradient(135deg,#ffd8c0,#ffb090)} .prod-bg-7{background:linear-gradient(135deg,#c8f8e8,#80e8c0)} .prod-bg-8{background:linear-gradient(135deg,#ffc8d8,#ff90b0)}
+   .product-emoji { font-size: 64px; transition: transform 0.4s; }
+   .product-card:hover .product-emoji { transform: scale(1.15) rotate(-8deg); }
+   .prod-badge { position: absolute; top: 12px; left: 12px; font-family: 'Anybody', sans-serif; font-weight: 700; font-size: 11px; padding: 4px 10px; border-radius: 20px; }
+   .badge-new{background:var(--black);color:var(--yellow)} .badge-hot{background:var(--pink);color:white} .badge-sale{background:var(--green);color:var(--black)}
+   .prod-fav { position: absolute; top: 12px; right: 12px; background: white; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; transition: transform 0.2s; border: none; }
+   .prod-fav:hover { transform: scale(1.2); }
+   .prod-info { padding: 14px 16px 16px; }
+   .prod-name { font-family: 'Anybody', sans-serif; font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+   .prod-sub { font-size: 12px; color: var(--gray); margin-bottom: 12px; }
+   .prod-bottom { display: flex; justify-content: space-between; align-items: center; }
+   .prod-price { font-family: 'Anybody', sans-serif; font-weight: 900; font-size: 18px; }
+   .prod-price-old { font-size: 12px; color: var(--gray); text-decoration: line-through; margin-left: 6px; font-family: 'DM Sans', sans-serif; }
+   .add-btn { background: var(--black); color: var(--white); border: none; border-radius: 20px; padding: 8px 16px; font-family: 'Anybody', sans-serif; font-weight: 700; font-size: 12px; cursor: pointer; transition: background 0.2s, transform 0.15s; }
+   .add-btn:hover { background: var(--pink); transform: scale(1.05); }
+
+
+   .promo { margin: 0 40px 72px; background: var(--black); border-radius: 24px; padding: 60px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; position: relative; overflow: hidden; }
+   .promo::before { content: ''; position: absolute; width: 300px; height: 300px; background: var(--yellow); border-radius: 50%; bottom: -100px; right: -50px; opacity: 0.15; }
+   .promo-label { display: inline-block; background: var(--pink); color: white; font-family: 'Anybody', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.1em; padding: 6px 14px; border-radius: 20px; margin-bottom: 20px; }
+   .promo-title { font-family: 'Anybody', sans-serif; font-weight: 900; font-size: clamp(36px,4vw,56px); color: white; letter-spacing: -0.04em; line-height: 1; margin-bottom: 16px; }
+   .promo-title span { color: var(--yellow); }
+   .promo-text { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.6; margin-bottom: 32px; }
+   .promo-right { display: flex; gap: 16px; justify-content: center; }
+   .promo-item { background: rgba(255,255,255,0.07); border-radius: 16px; padding: 24px 20px; text-align: center; flex: 1; }
+   .promo-emoji { font-size: 36px; margin-bottom: 10px; }
+   .promo-item-title { font-family: 'Anybody', sans-serif; font-weight: 700; font-size: 14px; color: white; margin-bottom: 4px; }
+   .promo-item-sub { font-size: 11px; color: rgba(255,255,255,0.4); }
+
+
+   .features { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; padding: 0 40px 72px; }
+   .feat { background: white; border-radius: 16px; padding: 28px 24px; display: flex; gap: 16px; align-items: flex-start; }
+   .feat-icon { font-size: 28px; flex-shrink: 0; }
+   .feat-title { font-family: 'Anybody', sans-serif; font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+   .feat-text { font-size: 12px; color: var(--gray); line-height: 1.5; }
+
+
+   .newsletter { background: var(--yellow); padding: 72px 40px; text-align: center; }
+   .nl-title { font-family: 'Anybody', sans-serif; font-weight: 900; font-size: clamp(32px,4vw,48px); letter-spacing: -0.04em; margin-bottom: 8px; }
+   .nl-sub { font-size: 15px; color: rgba(0,0,0,0.55); margin-bottom: 32px; }
+   .nl-form { display: flex; max-width: 440px; margin: 0 auto; border-radius: 30px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
+   .nl-input { flex: 1; border: none; padding: 16px 24px; font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; }
+   .nl-btn { background: var(--black); color: var(--yellow); border: none; padding: 16px 28px; font-family: 'Anybody', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer; transition: background 0.2s; }
+   .nl-btn:hover { background: var(--pink); color: white; }
+
+
+   footer { background: var(--black); color: white; padding: 56px 40px 32px; }
+   .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 48px; }
+   .footer-logo { font-family: 'Anybody', sans-serif; font-weight: 900; font-size: 28px; color: var(--yellow); margin-bottom: 12px; }
+   .footer-about { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.6; max-width: 240px; margin-bottom: 24px; }
+   .footer-socials { display: flex; gap: 10px; }
+   .social-btn { width: 36px; height: 36px; background: rgba(255,255,255,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; transition: background 0.2s, transform 0.2s; text-decoration: none; }
+   .social-btn:hover { background: var(--pink); transform: scale(1.1); }
+   .footer-col h4 { font-family: 'Anybody', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.05em; margin-bottom: 20px; }
+   .footer-col ul { list-style: none; }
+   .footer-col li { margin-bottom: 10px; }
+   .footer-col a { font-size: 13px; color: rgba(255,255,255,0.45); text-decoration: none; transition: color 0.2s; }
+   .footer-col a:hover { color: var(--yellow); }
+   .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; }
+   .footer-copy { font-size: 12px; color: rgba(255,255,255,0.3); }
+   .footer-pays { display: flex; gap: 8px; }
+   .pay-tag { font-size: 10px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); padding: 4px 10px; border-radius: 6px; font-family: 'Anybody', sans-serif; font-weight: 700; }
+
+
+   @keyframes popIn { from{transform:scale(0.8);opacity:0} to{transform:scale(1);opacity:1} }
+   @keyframes slideUp { from{transform:translateY(30px);opacity:0} to{transform:translateY(0);opacity:1} }
+   .fade-in { opacity:0; transform:translateY(24px); transition:opacity 0.6s ease, transform 0.6s ease; }
+   .fade-in.visible { opacity:1; transform:translateY(0); }
+ </style>
+</head>
+<body>
+
+
+ <nav>
+   <a href="#" class="nav-logo">DRIP STUDIO 🔥</a>
+   <ul class="nav-links">
+     <li><a href="#">New Drops</a></li>
+     <li><a href="#">Women</a></li>
+     <li><a href="#">Men</a></li>
+     <li><a href="#">Sale 🏷️</a></li>
+   </ul>
+   <div class="nav-right">
+     <input class="nav-search" type="text" placeholder="Search styles..."/>
+     <button class="nav-cart">🛍 Cart (2)</button>
+   </div>
+ </nav>
+
+
+ <section class="hero">
+   <div class="hero-left">
+     <span class="hero-tag">🚀 NEW DROP — SUMMER 2026</span>
+     <h1 class="hero-title">Fresh<br><span class="stroke">Fits</span><br>Daily.</h1>
+     <p class="hero-desc">No boring clothes here. Just good vibes, great styles and prices that don't make you cry.</p>
+     <div class="hero-btns">
+       <a href="#" class="btn-black">Shop Now →</a>
+       <a href="#" class="btn-outline">See Lookbook</a>
+     </div>
+     <div class="hero-stats">
+       <div><p class="stat-num">12K+</p><p class="stat-label">Happy customers</p></div>
+       <div><p class="stat-num">4.9 ⭐</p><p class="stat-label">Avg. rating</p></div>
+       <div><p class="stat-num">500+</p><p class="stat-label">Styles available</p></div>
+     </div>
+   </div>
+   <div class="hero-right">
+     <div class="hero-card"><div class="hero-card-bg hc1"></div><div class="hero-card-icon">👗</div><span class="hero-card-label">Womenswear</span></div>
+     <div class="hero-card"><div class="hero-card-bg hc2"></div><div class="hero-card-icon">👕</div><span class="hero-card-label">Menswear</span></div>
+     <div class="hero-card"><div class="hero-card-bg hc3"></div><div class="hero-card-icon">👟</div><span class="hero-card-label">Accessories</span></div>
+   </div>
+ </section>
+
+
+ <div class="ticker">
+   <div class="ticker-inner">
+     <span class="ticker-item">🔥 NEW DROP EVERY FRIDAY</span><span class="ticker-item">✈️ FREE SHIPPING OVER €50</span><span class="ticker-item">💸 30-DAY FREE RETURNS</span><span class="ticker-item">⚡ SAME DAY DISPATCH</span><span class="ticker-item">🌍 WE SHIP WORLDWIDE</span>
+     <span class="ticker-item">🔥 NEW DROP EVERY FRIDAY</span><span class="ticker-item">✈️ FREE SHIPPING OVER €50</span><span class="ticker-item">💸 30-DAY FREE RETURNS</span><span class="ticker-item">⚡ SAME DAY DISPATCH</span><span class="ticker-item">🌍 WE SHIP WORLDWIDE</span>
+   </div>
+ </div>
+
+
+ <section class="section">
+   <div class="section-top">
+     <h2 class="section-title">Shop by Vibe 🎯</h2>
+     <a href="#" class="link-all">All categories →</a>
+   </div>
+   <div class="cat-row">
+     <div class="cat-pill active"><div class="cat-circle cc1">👗</div><span class="cat-name">Dresses</span></div>
+     <div class="cat-pill"><div class="cat-circle cc2">👕</div><span class="cat-name">T-Shirts</span></div>
+     <div class="cat-pill"><div class="cat-circle cc3">👖</div><span class="cat-name">Trousers</span></div>
+     <div class="cat-pill"><div class="cat-circle cc4">🧥</div><span class="cat-name">Jackets</span></div>
+     <div class="cat-pill"><div class="cat-circle cc5">👟</div><span class="cat-name">Shoes</span></div>
+     <div class="cat-pill"><div class="cat-circle" style="background:#e0f4ff">🧢</div><span class="cat-name">Hats</span></div>    </div>
+ </section>
+
+
+ <section class="section products-bg">
+   <div class="section-top">
+     <h2 class="section-title">New Drops 🔥</h2>
+     <a href="#" class="link-all">See all →</a>
+   </div>
+   <div class="product-grid">
+     <div class="product-card fade-in"><div class="product-img prod-bg-1"><span class="product-emoji">👗</span><span class="prod-badge badge-new">NEW</span><button class="prod-fav">🤍</button></div><div class="prod-info"><p class="prod-name">Floral Summer Dress</p><p class="prod-sub">Available in 5 colours</p><div class="prod-bottom"><span class="prod-price">€49</span><button class="add-btn">+ Add</button></div></div></div>
+     <div class="product-card fade-in"><div class="product-img prod-bg-2"><span class="product-emoji">🧥</span><span class="prod-badge badge-hot">HOT</span><button class="prod-fav">🤍</button></div><div class="prod-info"><p class="prod-name">Oversized Denim Jacket</p><p class="prod-sub">Unisex · XS–XXL</p><div class="prod-bottom"><span class="prod-price">€79</span><button class="add-btn">+ Add</button></div></div></div>
+     <div class="product-card fade-in"><div class="product-img prod-bg-3"><span class="product-emoji">👕</span><span class="prod-badge badge-sale">−40%</span><button class="prod-fav">❤️</button></div><div class="prod-info"><p class="prod-name">Vintage Graphic Tee</p><p class="prod-sub">Limited stock!</p><div class="prod-bottom"><span class="prod-price">€19<span class="prod-price-old">€32</span></span><button class="add-btn">+ Add</button></div></div></div>
+     <div class="product-card fade-in"><div class="product-img prod-bg-4"><span class="product-emoji">👟</span><span class="prod-badge badge-new">NEW</span><button class="prod-fav">🤍</button></div><div class="prod-info"><p class="prod-name">Chunky Sneakers</p><p class="prod-sub">Sizes 36–45</p><div class="prod-bottom"><span class="prod-price">€89</span><button class="add-btn">+ Add</button></div></div></div>
+   </div>
+ </section>
+
+
+ <div class="promo fade-in">
+   <div>
+     <span class="promo-label">🏷️ MEMBERS DEAL</span>
+     <h2 class="promo-title">Get <span>20% off</span><br>your first order</h2>
+     <p class="promo-text">Sign up to our newsletter and unlock your discount code instantly. No spam — just good deals and early access to new drops.</p>
+     <a href="#newsletter" class="btn-black" style="background:var(--yellow);color:var(--black)">Claim Discount →</a>
+   </div>
+   <div class="promo-right">
+     <div class="promo-item"><div class="promo-emoji">🚀</div><p class="promo-item-title">Early Access</p><p class="promo-item-sub">New drops first</p></div>
+     <div class="promo-item"><div class="promo-emoji">💰</div><p class="promo-item-title">Exclusive Deals</p><p class="promo-item-sub">Members-only prices</p></div>
+     <div class="promo-item"><div class="promo-emoji">🎁</div><p class="promo-item-title">Birthday Gift</p><p class="promo-item-sub">Free surprise every year</p></div>
+   </div>
+ </div>
+
+
+ <section class="section">
+   <div class="section-top">
+     <h2 class="section-title">Fan Favourites ⭐</h2>
+     <a href="#" class="link-all">See all →</a>
+   </div>
+   <div class="product-grid">
+     <div class="product-card fade-in"><div class="product-img prod-bg-6"><span class="product-emoji">🧣</span><button class="prod-fav">🤍</button></div><div class="prod-info"><p class="prod-name">Knit Cardigan</p><p class="prod-sub">Super cosy · 6 colours</p><div class="prod-bottom"><span class="prod-price">€62</span><button class="add-btn">+ Add</button></div></div></div>
+     <div class="product-card fade-in"><div class="product-img prod-bg-7"><span class="product-emoji">🩲</span><span class="prod-badge badge-hot">HOT</span><button class="prod-fav">🤍</button></div><div class="prod-info"><p class="prod-name">Linen Wide-Leg Pants</p><p class="prod-sub">Perfect for summer</p><div class="prod-bottom"><span class="prod-price">€45</span><button class="add-btn">+ Add</button></div></div></div>
+     <div class="product-card fade-in"><div class="product-img prod-bg-8"><span class="product-emoji">🧢</span><span class="prod-badge badge-sale">−25%</span><button class="prod-fav">🤍</button></div><div class="prod-info"><p class="prod-name">Logo Cap</p><p class="prod-sub">Adjustable · One size</p><div class="prod-bottom"><span class="prod-price">€22<span class="prod-price-old">€29</span></span><button class="add-btn">+ Add</button></div></div></div>
+   </div>
+ </section>
+
+
+ <div class="features">
+   <div class="feat fade-in"><span class="feat-icon">🚚</span><div><p class="feat-title">Free Shipping</p><p class="feat-text">On orders over €50. Express options available at checkout.</p></div></div>
+   <div class="feat fade-in"><span class="feat-icon">↩️</span><div><p class="feat-title">Easy Returns</p><p class="feat-text">Changed your mind? 30 days to return, no drama.</p></div></div>
+   <div class="feat fade-in"><span class="feat-icon">🔒</span><div><p class="feat-title">Secure Payment</p><p class="feat-text">Visa, Mastercard, PayPal, Klarna — all safe and encrypted.</p></div></div>
+   <div class="feat fade-in"><span class="feat-icon">💬</span><div><p class="feat-title">24/7 Chat Support</p><p class="feat-text">Got a question? Our team replies in under 5 minutes.</p></div></div>
+ </div>
+
+
+ <section class="newsletter" id="newsletter">
+   <h2 class="nl-title">Don't miss a drop </h2>
+   <p class="nl-sub">Join 12,000+ people who get early access and exclusive discounts every week.</p>
+   <div class="nl-form">
+     <input class="nl-input" type="email" placeholder="Enter your email..."/>
+     <button class="nl-btn">Get 20% Off →</button>
+   </div>
+ </section>
+
+
+ <footer>
+   <div class="footer-top">
+     <div>
+       <p class="footer-logo">DRIP STUDIO 🔥</p>
+       <p class="footer-about">Your go-to spot for fresh, affordable fashion. New styles every week — no boring stuff allowed.</p>
+       <div class="footer-socials">
+         <a href="#" class="social-btn">📸</a>
+         <a href="#" class="social-btn">🎵</a>
+         <a href="#" class="social-btn">📌</a>
+         <a href="#" class="social-btn">▶️</a>
+       </div>
+     </div>
+     <div class="footer-col"><h4>SHOP</h4><ul><li><a href="#">New Drops</a></li><li><a href="#">Women</a></li><li><a href="#">Men</a></li><li><a href="#">Accessories</a></li><li><a href="#">Sale</a></li></ul></div>
+     <div class="footer-col"><h4>HELP</h4><ul><li><a href="#">Size Guide</a></li><li><a href="#">Track Order</a></li><li><a href="#">Returns</a></li><li><a href="#">Contact Us</a></li><li><a href="#">FAQ</a></li></ul></div>
+     <div class="footer-col"><h4>ABOUT</h4><ul><li><a href="#">Our Story</a></li><li><a href="#">Sustainability</a></li><li><a href="#">Careers</a></li><li><a href="#">Press</a></li><li><a href="#">Affiliates</a></li></ul></div>
+   </div>
+   <div class="footer-bottom">
+     <p class="footer-copy">© 2026 Drip Studio. All rights reserved.</p>
+     <div class="footer-pays"><span class="pay-tag">VISA</span><span class="pay-tag">MC</span><span class="pay-tag">PAYPAL</span><span class="pay-tag">KLARNA</span><span class="pay-tag">APPLE PAY</span></div>
+   </div>
+ </footer>
+
+
+ <script>
+   const observer = new IntersectionObserver(entries => {
+     entries.forEach((e, i) => { if (e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i * 80); });
+   }, { threshold: 0.1 });
+   document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+
+   document.querySelectorAll('.cat-pill').forEach(pill => {
+     pill.addEventListener('click', () => {
+       document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+       pill.classList.add('active');
+     });
+   });
+
+
+   document.querySelectorAll('.prod-fav').forEach(btn => {
+     btn.addEventListener('click', e => { e.stopPropagation(); btn.textContent = btn.textContent === '🤍' ? '❤️' : '🤍'; });
+   });
+
+
+   document.querySelectorAll('.add-btn').forEach(btn => {
+     btn.addEventListener('click', () => {
+       const orig = btn.textContent;
+       btn.textContent = '✓ Added!';
+       btn.style.background = 'var(--green)'; btn.style.color = 'var(--black)';
+       setTimeout(() => { btn.textContent = orig; btn.style.background = ''; btn.style.color = ''; }, 1500);
+     });
+   });
+ </script>
+</body>
+</html>
+
+
+
